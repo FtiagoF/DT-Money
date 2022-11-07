@@ -1,39 +1,55 @@
 import { SummaryCard, SummaryContainer } from "./styles";
-import { ArrowCircleUp, CurrencyDollar, ArrowCircleDown } from 'phosphor-react'
+import { ArrowCircleUp, CurrencyDollar, ArrowCircleDown } from "phosphor-react";
 import { useContext } from "react";
 import { TransactionsContext } from "../../contexts/TransactionsContext";
 
 export function Summary() {
-    const {transactions} = useContext(TransactionsContext)
+  const { transactions } = useContext(TransactionsContext);
 
-    return(
-        <SummaryContainer>
-            <SummaryCard>
-                <header>
-                    <span>Entradas</span>
-                    <ArrowCircleUp size={32} color="#00b37e" />
-                </header>
+  const summary = transactions.reduce((acc, transaction) => {
+    if(transaction.type === 'income') {
+        acc.income += transaction.price;
+        acc.total += transaction.price
+    } else {
+        acc.total -= transaction.price;
+        acc.outcome += transaction.price;
+    }
 
-                <strong>R$ 17.400,00</strong>
-            </SummaryCard>
+    return acc;
+  }, {
+    income: 0,
+    outcome: 0,
+    total: 0,
+  });
 
-            <SummaryCard>
-                <header>
-                    <span>Saídas</span>
-                    <ArrowCircleDown size={32} color="#f75a68" />
-                </header>
+  return (
+    <SummaryContainer>
+      <SummaryCard>
+        <header>
+          <span>Entradas</span>
+          <ArrowCircleUp size={32} color="#00b37e" />
+        </header>
 
-                <strong>R$ 17.400,00</strong>
-            </SummaryCard>
+        <strong>R$ {summary.income}</strong>
+      </SummaryCard>
 
-            <SummaryCard variant="green">
-                <header>
-                    <span>Total</span>
-                    <CurrencyDollar size={32} color="#fff" />
-                </header>
+      <SummaryCard>
+        <header>
+          <span>Saídas</span>
+          <ArrowCircleDown size={32} color="#f75a68" />
+        </header>
 
-                <strong>R$ 17.400,00</strong>
-            </SummaryCard>
-        </SummaryContainer>
-    )
+        <strong>R$ {summary.outcome}</strong>
+      </SummaryCard>
+
+      <SummaryCard variant="green">
+        <header>
+          <span>Total</span>
+          <CurrencyDollar size={32} color="#fff" />
+        </header>
+
+        <strong>R$ {summary.total}</strong>
+      </SummaryCard>
+    </SummaryContainer>
+  );
 }
