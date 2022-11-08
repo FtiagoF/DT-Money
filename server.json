@@ -11,7 +11,7 @@
         {
             "id": 2,
             "description": "Hamburger",
-            "type": "Outcome",
+            "type": "outcome",
             "category": "Alimentação",
             "price": 50,
             "createdAt": "2022-11-07T23:09:38.701Z"
